@@ -26,9 +26,9 @@ function calcAverage(data) {
 function checkWinner(data) {
     let avgDolphins = calcAverage(data[0].score);
     let avgKoalas = calcAverage(data[1].score);
-    if (avgDolphins > 2 * avgKoalas) {
+    if (avgDolphins >= 2 * avgKoalas) {
         return `Dolphins win (${avgDolphins} vs ${avgKoalas})`;
-    } else if (2 * avgDolphins < avgKoalas) {
+    } else if (2 * avgDolphins <= avgKoalas) {
         return `Koalas win (${avgKoalas} vs ${avgDolphins})`;
     } else {
         return `Draw (${avgDolphins} vs ${avgKoalas})`;
