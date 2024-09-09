@@ -45,3 +45,44 @@ Array.prototype.reduceRight2 = function(callback, initValue) {
 }
 var arr = [1, 2, 3, 4, 5];
 console.log("ReduceRight: " + arr.reduceRight2((total, item) => total + item, 0));
+
+//some: Kiem tra xem co it nhat 1 phan
+
+Array.prototype.some2 = function(callback) {
+    for (let i = 0; i < this.length; i++) {
+        if (callback(this[i], i, this)) {
+            return true;
+        }
+    }
+    return false;
+} 
+
+var arr = [1, 2, 3, 4, 5];
+console.log("Some: " + arr.some2((item) => item > 4));
+
+//filter: Loc cac gia tri trong mang thoa yeu cau trong callback, return array
+Array.prototype.filter2 = function(callback) {
+    let newArr = [];
+    for (let i = 0; i < this.length; i++) {
+        if (callback(this[i], i, this)) {
+            newArr.push(this[i]);
+        }
+    }
+    return newArr;
+}
+
+var arr = [1, 2, 3, 4, 5];
+console.log("Filter: " + arr.filter2((item) => item > 3));
+
+//find: Tim kiem gia tri dau tien thoa yeu cau
+Array.prototype.find2 = function(callback) {
+    for (let i = 0; i < this.length; i++) {
+        if (callback(this[i], i, this)) {
+            return this[i];
+        }
+    }
+    return undefined;
+}
+
+var arr = [1, 2, 3, 4, 5];
+console.log("Find: " + arr.find2((item) => item > 3));
