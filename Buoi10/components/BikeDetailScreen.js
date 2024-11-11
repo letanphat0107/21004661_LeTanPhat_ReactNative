@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-function BikeDetailScreen({ route }) {
+function BikeDetailScreen({navigation, route }) {
   const { bike } = route.params;
 
   return (
@@ -18,7 +18,9 @@ function BikeDetailScreen({ route }) {
         <TouchableOpacity style={styles.favoriteButton}>
           <Text>❤️</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addToCartButton}>
+        <TouchableOpacity 
+          style={styles.addToCartButton} 
+          onPress={() => navigation.navigate('AddBike', { bike })}>
           <Text style={styles.addToCartText}>Add to cart</Text>
         </TouchableOpacity>
       </View>
