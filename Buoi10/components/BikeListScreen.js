@@ -1,34 +1,19 @@
 import React , { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image , ActivityIndicator} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchBikes } from '../redux/bikeSlice';
 
 const BikeListScreen = ({ navigation }) => {
-  const [bikes, setBikes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const bikes = useSelector((state) => state.bikes.items);
+  const status = useSelector((state) => state.bikes.status);
+  const error = useSelector((state) => state.bikes.error);
 
   useEffect(() => {
-    // Fetch data from the API
-    const fetchBikes = async () => {
-      try {
-        const response = await fetch('https://67319a237aaf2a9aff112759.mockapi.io/bike');  
-        const data = await response.json();
-        
-        // Process data if image paths are URLs
-        const formattedData = data.map(bike => ({
-          ...bike,
-          // Convert image to URI format if images are hosted online
-          image: { uri: bike.image },  // Use { uri: 'https://example.com/image.png' } if images are online
-        }));
-
-        setBikes(formattedData);
-      } catch (error) {
-        console.error('Failed to fetch bikes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBikes();
-  }, []);
+    if (status === 'idle') {
+      dispatch(fetchBikes());
+    }
+  }, [status, dispatch]);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('BikeDetail', { bike: item })}>
@@ -41,7 +26,7 @@ const BikeListScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  if (loading) {
+  if (status === 'loading') {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#ff5252" />
