@@ -7,7 +7,7 @@ function BikeDetailScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={ bike.image } style={styles.image} />
+        <Image source={ {uri: bike.img} } style={styles.image} />
       </View>
       <Text style={styles.bikeName}>{bike.name}</Text>
       <Text style={styles.discountText}>{bike.discount}% OFF | ${bike.price}</Text>

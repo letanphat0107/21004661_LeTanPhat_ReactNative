@@ -1,26 +1,53 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-
-const bikes = [
-  { id: '1', name: 'Pinarello', price: 1800, image: require("../assets/bifour_-removebg-preview.png"), description: "It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc." },
-  { id: '2', name: 'Pina Mountai', price: 1700, image: require("../assets/bione-removebg-preview.png"), description: "It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc." },
-  { id: '3', name: 'Pina Bike', price: 1500, image: require("../assets/bithree_removebg-preview.png"), description: "It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc." },
-  { id: '4', name: 'Pinarello', price: 1900, image: require("../assets/bithree_removebg-preview-1.png"), description: "It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc." },
-  { id: '5', name: 'Pinarello', price: 2700, image: require("../assets/bifour_-removebg-preview.png"), description: "It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc." },
-  { id: '6', name: 'Pinarello', price: 1350, image: require("../assets/bifour_-removebg-preview.png"), description: "It is a very important form of writing as we write almost everything in paragraphs, be it an answer, essay, story, emails, etc." },
-];
+import React , { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image , ActivityIndicator} from 'react-native';
 
 const BikeListScreen = ({ navigation }) => {
+  const [bikes, setBikes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch data from the API
+    const fetchBikes = async () => {
+      try {
+        const response = await fetch('https://67319a237aaf2a9aff112759.mockapi.io/bike');  
+        const data = await response.json();
+        
+        // Process data if image paths are URLs
+        const formattedData = data.map(bike => ({
+          ...bike,
+          // Convert image to URI format if images are hosted online
+          image: { uri: bike.image },  // Use { uri: 'https://example.com/image.png' } if images are online
+        }));
+
+        setBikes(formattedData);
+      } catch (error) {
+        console.error('Failed to fetch bikes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBikes();
+  }, []);
+
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('BikeDetail', { bike: item })}>
       <TouchableOpacity style={styles.favoriteIcon}>
         <Text>❤️</Text>
       </TouchableOpacity>
-      <Image source={ item.image } style={styles.image} />
+      <Image source={ {uri: item.img} } style={styles.image} />
       <Text style={styles.bikeName}>{item.name}</Text>
       <Text style={styles.price}>${item.price}</Text>
     </TouchableOpacity>
   );
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#ff5252" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
